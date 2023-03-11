@@ -1,5 +1,5 @@
 # Efficient-SSL
-Implementation for Efficient SSL paper UAI 2023 Submission
+Implementation for Efficient SSL paper [under Submission]
 
 We provide implementations for Algorithm 2 (Approx Feedback Set) using both HarmonicApprox and NonParametricApprox as subroutines
 

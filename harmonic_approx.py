@@ -467,7 +467,7 @@ def main():
     )
     for subset_index in range(W.shape[0]):
         subset_W, subset_Y = W[subset_index], Y[subset_index]
-        print(f"Calculating intervals, subset {subset_index + 1} of {W.shape[0]}. dataset: {args.dataset}, seed {args.seed} ")
+        print(f"Calculating intervals, subset {subset_index + 1} of {W.shape[0]}. dataset: {args.dataset}, seed {args.seed}")
         intervals, time, count = find_all_approx_feedback_sets(
             sigma_0 = args.sigma_start,
             sigma_end=args.sigma_end, 

@@ -301,7 +301,7 @@ def plot_all_approx_feedback_sets(sigma_0,sigma_end, intervals, ground_truth_acc
         with open(intervals_path, "w") as file:
             file.write(json.dumps(intervals_dict))
 
-def find_all_approx_feedback_sets(sigma_0, sigma_end, W, Y, main_points, extended_points, num_labeled, inv_function, interval_function, Lambda=1.4, step_size=.05, epsilon=1e-3, delta=1, kNN=None):
+def find_all_approx_feedback_sets(sigma_0, sigma_end, W, Y, main_points, extended_points, num_labeled, inv_function, interval_function, Lambda=1.4, step_size=.05, epsilon=1e-3, delta=1, kNN=None, all=False):
     """given a starting and ending sigma, return intervals in that range
 
     Args:
@@ -326,17 +326,25 @@ def find_all_approx_feedback_sets(sigma_0, sigma_end, W, Y, main_points, extende
     overallcount = 0
     time1 = time.time()
     # find all intervals
-    while sigma < sigma_end:
+    interval_count = 0
+    while sigma < sigma_end and (interval_count <= 20):
         min, maxVal, count = interval_function(W, Y[0:num_labeled], main_points, extended_points, sigma, Lambda, inv_function, epsilon, delta, kNN=kNN)
         overallcount += count
         intervals.append((min, maxVal))
         # print(f"\n\n Algorithm finished, min: {min}, max: {maxVal}")
         sigma = maxVal + step_size
+        interval_count += 1
     time2 = time.time()
     return intervals, time2 - time1, overallcount
 
 def parse_args():
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--all",
+        type=bool,
+        default=False,
+    )
 
     parser.add_argument(
         "--dataset",
@@ -511,10 +519,10 @@ def main():
         num_subsets=args.num_experiments, 
         PCA=args.PCA, 
         PCA_n_components=args.n_components, 
-        seed=args.seed
+        seed=args.seed,
     )
     for subset_index in range(args.num_experiments):
-        print(f"Calculating intervals, subset {subset_index + 1} of {W.shape[0]}. dataset: {args.dataset} seed {args.seed} ")
+        print(f"Calculating intervals, subset {subset_index + 1} of {W.shape[0]}. dataset: {args.dataset} seed {args.seed}  all: {args.all}")
         curr_results_X, curr_results_Y, curr_values_main, curr_values_extended = results_X[subset_index], results_Y[subset_index], values_main[subset_index], values_extended[subset_index]
 
         acc_main, acc_extended, incorrect_extended = find_accuracy_values( 
@@ -557,8 +565,8 @@ def main():
             extended_accuracys=acc_extended, 
             step_size=args.step_size, 
             incorrect_extended=incorrect_extended,
-            images_path=f"{args.images_path}non_parametric_{args.dataset}_{args.extension_size}_{args.num_labels}_labels_seed_{args.seed + subset_index}_{args.inv_string}{args.kNN_path}{args.PCA_path}.png", 
-            intervals_path=f"{args.intervals_path}non_parametric_{args.dataset}_{args.extension_size}_{args.num_labels}_labels_seed_{args.seed + subset_index}_{args.inv_string}{args.kNN_path}{args.PCA_path}.json",
+            images_path=f"{args.images_path}non_parametric_{args.dataset}_{args.extension_size}_{args.num_labels}_labels_seed_{args.seed + subset_index}_{args.inv_string}{args.kNN_path}{args.PCA_path}_{args.all}.png", 
+            intervals_path=f"{args.intervals_path}non_parametric_{args.dataset}_{args.extension_size}_{args.num_labels}_labels_seed_{args.seed + subset_index}_{args.inv_string}{args.kNN_path}{args.PCA_path}_{args.all}.json",
             time=time,
             overallcount=overallcount,
         )

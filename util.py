@@ -291,21 +291,15 @@ def setup_delalleau_experiment(dataset, subset_size, extension_size, labels_subs
         PCA_n_components = 86
     X, Y = load_pytorch_dataset(dataset)
 
-    if dataset == "CIFAR":
-        if labels_subset is not None:
-            labels_mask = create_certain_labels_mask(Y, labels_subset)
-            X, Y = X[labels_mask], Y[labels_mask]
-        print("using features from 3rd layer of ResNet 18 model for CIFAR dataset")
-        path_tag = "labels_" + "_".join([str(val) for val in labels_subset])
-        print(X.shape)
-        X = perform_Resnet_Clean(X, path_tag)
-    else:
-        if PCA:
-            X = perform_PCA(X, PCA_n_components, dataset)
+    if PCA:
+        X = perform_PCA(X, PCA_n_components, dataset)
 
-        if labels_subset is not None:
-            labels_mask = create_certain_labels_mask(Y, labels_subset)
-            X, Y = X[labels_mask], Y[labels_mask]
+    if labels_subset is not None:
+        labels_mask = create_certain_labels_mask(Y, labels_subset)
+        X, Y = X[labels_mask], Y[labels_mask]
+
+    extension_size = X.shape[0] - subset_size
+    print("all true, extension size: ", extension_size)
 
     n, datapoint_size = X.shape
     results_X, results_Y = np.zeros((num_subsets, subset_size, subset_size)), np.zeros((num_subsets, subset_size + extension_size))

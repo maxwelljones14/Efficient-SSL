@@ -433,8 +433,7 @@ def find_all_approx_feedback_sets(
     overallcount = 0
     time1 = time.time()
     # find all intervals
-    interval_count = 0
-    while sigma < sigma_end and (interval_count <= 20):
+    while sigma < sigma_end:
         min, maxVal, count = interval_function(
             W,
             Y[0:num_labeled],
@@ -451,19 +450,12 @@ def find_all_approx_feedback_sets(
         intervals.append((min, maxVal))
         # print(f"\n\n Algorithm finished, min: {min}, max: {maxVal}")
         sigma = maxVal + step_size
-        interval_count += 1
     time2 = time.time()
     return intervals, time2 - time1, overallcount
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        "--all",
-        type=bool,
-        default=False,
-    )
 
     parser.add_argument(
         "--dataset",
@@ -633,7 +625,7 @@ def main():
     )
     for subset_index in range(args.num_experiments):
         print(
-            f"Calculating intervals, subset {subset_index + 1} of {W.shape[0]}. dataset: {args.dataset} seed {args.seed}  all: {args.all}"
+            f"Calculating intervals, subset {subset_index + 1} of {W.shape[0]}. dataset: {args.dataset} seed {args.seed}"
         )
         curr_results_X, curr_results_Y, curr_values_main, curr_values_extended = (
             results_X[subset_index],
@@ -682,8 +674,8 @@ def main():
             extended_accuracys=acc_extended,
             step_size=args.step_size,
             incorrect_extended=incorrect_extended,
-            images_path=f"{args.images_path}non_parametric_{args.dataset}_{args.extension_size}_{args.num_labels}_labels_seed_{args.seed + subset_index}_{args.inv_string}{args.kNN_path}{args.PCA_path}_{args.all}.png",
-            intervals_path=f"{args.intervals_path}non_parametric_{args.dataset}_{args.extension_size}_{args.num_labels}_labels_seed_{args.seed + subset_index}_{args.inv_string}{args.kNN_path}{args.PCA_path}_{args.all}.json",
+            images_path=f"{args.images_path}non_parametric_{args.dataset}_{args.extension_size}_{args.num_labels}_labels_seed_{args.seed + subset_index}_{args.inv_string}{args.kNN_path}{args.PCA_path}.png",
+            intervals_path=f"{args.intervals_path}non_parametric_{args.dataset}_{args.extension_size}_{args.num_labels}_labels_seed_{args.seed + subset_index}_{args.inv_string}{args.kNN_path}{args.PCA_path}.json",
             time=time,
             overallcount=overallcount,
         )

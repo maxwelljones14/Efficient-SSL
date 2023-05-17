@@ -105,9 +105,7 @@ def measure_accuracy(guess_arr, actual_arr, threshold=0.5):
     Returns:
         _type_: accuracy, array of incorrect examples
     """
-    answers_array = np.logical_not(
-        np.logical_xor(guess_arr > threshold, actual_arr > threshold)
-    )
+    answers_array = np.logical_not(np.logical_xor(guess_arr > threshold, actual_arr > threshold))
     (incorrect,) = np.where(np.logical_not(answers_array))
     return np.sum(answers_array) / guess_arr.shape[0], incorrect
 
@@ -229,9 +227,7 @@ def load_pytorch_dataset(name):
     if name == "CIFAR":
         X_train = np.zeros((len(trainset), 3, 32, 32))
     else:
-        X_train = np.zeros(
-            (len(trainset), trainset[0][0].shape[1], trainset[0][0].shape[2])
-        )
+        X_train = np.zeros((len(trainset), trainset[0][0].shape[1], trainset[0][0].shape[2]))
     y_train = np.zeros((len(trainset)))
 
     if name == "Omniglot":
@@ -255,9 +251,7 @@ def load_pytorch_dataset(name):
             y_train[index] = label
 
     if name != "CIFAR":
-        X_train = X_train.reshape(
-            (X_train.shape[0], X_train.shape[1] * X_train.shape[2])
-        )
+        X_train = X_train.reshape((X_train.shape[0], X_train.shape[1] * X_train.shape[2]))
     return X_train, y_train
 
 
@@ -312,7 +306,7 @@ def perform_PCA(X, n_components, path_tag, save=True):
         _type_: _description_
     """
     if not os.path.exists(f"PCA_files/{path_tag}_PCA.npy"):
-        print("creating principle components...")
+        print("creating principle components to be saved in PCA_file folder...")
         ncomponents = n_components
         pca = PCA(n_components=ncomponents)
         principle_components = pca.fit_transform(X)
@@ -340,9 +334,7 @@ def setup_delalleau_experiment(
     seed=0,
 ):
     if PCA and PCA_n_components is None:
-        print(
-            "Warning: no number of PCA components given - using default 86 dimensions"
-        )
+        print("Warning: no number of PCA components given - using default 86 dimensions")
         PCA_n_components = 86
     X, Y = load_pytorch_dataset(dataset)
 
@@ -353,16 +345,13 @@ def setup_delalleau_experiment(
         labels_mask = create_certain_labels_mask(Y, labels_subset)
         X, Y = X[labels_mask], Y[labels_mask]
 
-    extension_size = X.shape[0] - subset_size
-    print("all true, extension size: ", extension_size)
-
     n, datapoint_size = X.shape
     results_X, results_Y = np.zeros((num_subsets, subset_size, subset_size)), np.zeros(
         (num_subsets, subset_size + extension_size)
     )
-    values_main, values_extended = np.zeros(
-        (num_subsets, subset_size, datapoint_size)
-    ), np.zeros((num_subsets, extension_size, datapoint_size))
+    values_main, values_extended = np.zeros((num_subsets, subset_size, datapoint_size)), np.zeros(
+        (num_subsets, extension_size, datapoint_size)
+    )
 
     for subset in range(num_subsets):
         np.random.seed(seed + subset)
@@ -405,9 +394,7 @@ def get_random_subsets(
         X,Y: ndarrays where X[i], Y[i] is the ith instance of the problem with X[i] being the weight matrix and Y[i] being the labels
     """
     if PCA and PCA_n_components is None:
-        print(
-            "Warning: no number of PCA components given - using default 86 dimensions"
-        )
+        print("Warning: no number of PCA components given - using default 86 dimensions")
         PCA_n_components = 86
     X, Y = load_pytorch_dataset(dataset)
 

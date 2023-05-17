@@ -21,3 +21,4 @@ For basic functionality to generate a set of plots using Non-Parametric Feedback
 ```
 python non_parametric_approx.py --CG_steps=20 --PCA --kNN 6 --PCA --dataset FashionMNIST
 ```
+NOTE: when running the two functions, it is ideal to have other tabs closed, as having many chrome tabs/other processes open greatly slows down runtime. 

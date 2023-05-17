@@ -12,7 +12,7 @@ python harmonic_approx.py --CG_steps=20 --num_experiments 3 --kNN 6 --PCA --data
 Run 
 
 ```
-run python gaussian_kernal_intervals.py --h
+python harmonic_approx.py --h
 ```
  for full list of arguments to pass in
 

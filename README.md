@@ -1,7 +1,7 @@
 # Efficient-SSL
-Implementation for Efficient SSL paper [under Submission]
+Implementation for Efficient SSL paper Accepted to UAI 2023 (Arxiv pending)
 
-We provide implementations for Algorithm 2 (Approx Feedback Set) using both HarmonicApprox and NonParametricApprox as subroutines
+We provide implementations for Algorithm 3 (Approx Feedback Set) using both HarmonicApprox (Algorithm 2 in the main body) and NonParametricApprox (Algorithm 2 in the appendix) as subroutines
 
 For basic functionality to generate a set of plots using Approx Feedback Set (here we use PCA as preprocessing and kNN graph of size 6): 
 

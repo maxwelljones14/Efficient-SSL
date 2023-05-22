@@ -562,6 +562,9 @@ def parse_args():
         default="intervals/",
         help="path to save intervals as .json files to. Default is intervals/",
     )
+    parser.add_argument(
+        "--root_path", type=str, default="/datasets/", help="path to save/locate pytorch datasets"
+    )
     args = parser.parse_args()
 
     if not args.PCA:
@@ -612,6 +615,7 @@ def main():
         PCA=args.PCA,
         PCA_n_components=args.n_components,
         seed=args.seed,
+        root=args.root_path,
     )
     results_X, results_Y, values_main, values_extended = util.setup_delalleau_experiment(
         dataset=args.dataset,
@@ -622,6 +626,7 @@ def main():
         PCA=args.PCA,
         PCA_n_components=args.n_components,
         seed=args.seed,
+        root=args.root_path,
     )
     for subset_index in range(args.num_experiments):
         print(

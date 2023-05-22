@@ -188,7 +188,7 @@ def k_highest_neighbors(W, k):
     return W
 
 
-def load_pytorch_dataset(name):
+def load_pytorch_dataset(name, root="/datasets/"):
     """load pytorch dataset given name
 
     Args:
@@ -202,56 +202,28 @@ def load_pytorch_dataset(name):
 
     if name == "MNIST":
         trainset = torchvision.datasets.MNIST(
-            root="/datasets/", download=True, train=True, transform=transform
+            root=root, download=True, train=True, transform=transform
         )
     elif name == "FashionMNIST":
         trainset = torchvision.datasets.FashionMNIST(
-            root="/datasets/", download=True, train=True, transform=transform
-        )
-    elif name == "CIFAR":
-        transform = transforms.Compose(
-            [ToTensor(), Normalize([0.4914, 0.4822, 0.4465], [0.2471, 0.2435, 0.2616])]
-        )
-        trainset = torchvision.datasets.CIFAR10(
-            root="/datasets/", download=True, train=False, transform=transform
+            root=root, download=True, train=True, transform=transform
         )
     elif name == "USPS":
         trainset = torchvision.datasets.USPS(
             root="/datasets/", download=True, train=True, transform=transform
         )
     else:
-        trainset = torchvision.datasets.Omniglot(
-            root="/datasets/", download=True, transform=transform
-        )
+        raise AssertionError("dataset should be one of MNIST, FashionMNIST, USPS")
 
-    if name == "CIFAR":
-        X_train = np.zeros((len(trainset), 3, 32, 32))
-    else:
-        X_train = np.zeros((len(trainset), trainset[0][0].shape[1], trainset[0][0].shape[2]))
+    X_train = np.zeros((len(trainset), trainset[0][0].shape[1], trainset[0][0].shape[2]))
     y_train = np.zeros((len(trainset)))
-
-    if name == "Omniglot":
-        y_train = [
-            trainset._characters[character_class].split("\\")[0]
-            for image_name, character_class in trainset._flat_character_images
-        ]
-        curr_number = 0
-        curr_value = y_train[0]
-        for index in range(len(y_train)):
-            if y_train[index] != curr_value:
-                curr_number += 1
-                curr_value = y_train[index]
-            y_train[index] = curr_number
-        y_train = np.array(y_train)
 
     for index in range(len(trainset)):
         data, label = trainset[index]
         X_train[index] = data
-        if name != "Omniglot":
-            y_train[index] = label
+        y_train[index] = label
 
-    if name != "CIFAR":
-        X_train = X_train.reshape((X_train.shape[0], X_train.shape[1] * X_train.shape[2]))
+    X_train = X_train.reshape((X_train.shape[0], X_train.shape[1] * X_train.shape[2]))
     return X_train, y_train
 
 
@@ -302,8 +274,6 @@ def perform_PCA(X, n_components, path_tag, save=True):
         path_tag (string): path_tag when savving the PCA components
         save (bool, optional): whether or not to save the PCA. Defaults to True.
 
-    Returns:
-        _type_: _description_
     """
     if not os.path.exists(f"PCA_files/{path_tag}_PCA.npy"):
         print("creating principle components to be saved in PCA_file folder...")
@@ -332,11 +302,28 @@ def setup_delalleau_experiment(
     PCA=False,
     PCA_n_components=None,
     seed=0,
+    root="/datasets/",
 ):
+    """setup NonParametric Approx Experiment - returns matrix corresponing to
+    the graph of the appropriate subset with labels, as well as the values for
+    the main and extended points from the algorithm
+
+    Args:
+        dataset (string): dataset to be used
+        subset_size (int): subset size for subset to be inverted
+        extension_size (int): extension size for soft label computation
+        labels_subset (list, optional): subset of labels to pick from when randomly choosing points. Defaults to None.
+        num_subsets (int, optional): number of distinct random subsets to return. Defaults to 1.
+        PCA (bool, optional): whether or not to use PCA. Defaults to False.
+        PCA_n_components (int, optional): number of components for PCA. Defaults to None.
+        seed (int, optional): seed to be used. Defaults to 0.
+        root (str, optional): dataset path. Defaults to "/datasets/".
+
+    """
     if PCA and PCA_n_components is None:
         print("Warning: no number of PCA components given - using default 86 dimensions")
         PCA_n_components = 86
-    X, Y = load_pytorch_dataset(dataset)
+    X, Y = load_pytorch_dataset(dataset, root)
 
     if PCA:
         X = perform_PCA(X, PCA_n_components, dataset)
@@ -378,6 +365,7 @@ def get_random_subsets(
     PCA=False,
     PCA_n_components=None,
     seed=0,
+    root="/datasets/",
 ):
     """return a list of random subsets from a given dataset
 
@@ -389,6 +377,7 @@ def get_random_subsets(
         PCA (bool, optional): whether or not to use PCA for this dataset. Defaults to False.
         PCA_n_components (int, optional): number of PCA components to use. If none, set to 86 as in Large Graph Construction paper. Defaults to None.
         seed (int, optional): seed to create subsets. Defaults to 0.
+        root (string, optional): root for dataset directory. Defaults to /datasets/
 
     Returns:
         X,Y: ndarrays where X[i], Y[i] is the ith instance of the problem with X[i] being the weight matrix and Y[i] being the labels
@@ -396,7 +385,7 @@ def get_random_subsets(
     if PCA and PCA_n_components is None:
         print("Warning: no number of PCA components given - using default 86 dimensions")
         PCA_n_components = 86
-    X, Y = load_pytorch_dataset(dataset)
+    X, Y = load_pytorch_dataset(dataset, root)
 
     if PCA:
         X = perform_PCA(X, PCA_n_components, dataset)

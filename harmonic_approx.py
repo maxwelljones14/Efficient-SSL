@@ -371,7 +371,7 @@ def plot_all_approx_feedback_sets_with_accuracy(
     fig, ax = plt.subplots()
     ax.add_collection(lc)
     plt.plot(val_range, ground_truth_accuracys)
-    plt.xlabel("sigma")
+    plt.xlabel(r"graph hyperparameter, $\sigma$")
     plt.ylabel("accuracy")
     plt.savefig(images_path)
     plt.close()
@@ -483,6 +483,9 @@ def parse_args():
         default="intervals/",
         help="path to save intervals as .json files to. Default is intervals/",
     )
+    parser.add_argument(
+        "--root_path", type=str, default="/datasets/", help="path to save/locate pytorch datasets"
+    )
     args = parser.parse_args()
 
     if not args.PCA:
@@ -543,6 +546,7 @@ def main():
         PCA=args.PCA,
         PCA_n_components=args.n_components,
         seed=args.seed,
+        root=args.root_path,
     )
     for subset_index in range(W.shape[0]):
         subset_W, subset_Y = W[subset_index], Y[subset_index]

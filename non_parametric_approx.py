@@ -371,7 +371,7 @@ def plot_all_approx_feedback_sets(
     ax.add_collection(lc)
     plt.plot(val_range, ground_truth_accuracys, label="subset accuracy")
     plt.plot(val_range, extended_accuracys, label="extended accuracy")
-    plt.xlabel("sigma")
+    plt.xlabel(r"graph hyperparameter, $\sigma$")
     plt.ylabel("accuracy")
     plt.title(title)
     plt.legend()

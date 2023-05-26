@@ -19,7 +19,7 @@ def find_non_parametric_labels(W, labels, num_labeled, Lambda, inv_function):
         inv_function (function): function to use for inverse
 
     Returns:
-        _type_: _description_
+        ndarray: approximate labels for unlabeled vertices
     """
     labels[num_labeled:] = np.zeros((labels.shape[0] - num_labeled))
     n = W.shape[0]
@@ -74,7 +74,8 @@ def transform_matrix(matrix, kNN=None, sigma=1):
 def non_parametric_approx(
     W, y, main_points, extended_points, num_labeled, Lambda, sigma, inv_function
 ):
-    """solves a single instance of the non parametric approximation problem, finding labels for some set L and extending them to some larger set
+    """solves a single instance of the non parametric approximation problem,
+    finding labels for some set L and extending them to some larger set
 
     Args:
         W (ndarray): weight matrix for subset L \cup U
@@ -124,7 +125,8 @@ def approx_feedback_set(
     unlabeled_subset=None,
     kNN=None,
 ):
-    """given a weight matrix W and labels Y and a starting sigma value, find a piecewise constant interval for sigma_0 with tolerance epsilon
+    """given a weight matrix W and labels Y and a starting sigma value,
+       find a piecewise constant interval for sigma_0 with tolerance epsilon
 
     Args:
         W (ndarray): weight matrix
@@ -267,8 +269,9 @@ def find_accuracy_values(
     step_size=0.05,
     kNN=None,
 ):
-    """find accuracy over some sigma range with some step size for a given problem (W, Y, num_labeled).
-    Also takes in an inverse function (full inverse vs CG method), problem instance function (single vs multiclass classification), and an accuracy function
+    """find accuracy over some sigma range with some step size
+    for a given problem (W, Y, num_labeled).Also takes in an inverse function (full inverse vs CG method),
+    problem instance function (single vs multiclass classification), and an accuracy function
 
     Args:
         sigma_0 (int): sigma start value

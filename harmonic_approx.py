@@ -58,7 +58,8 @@ def harmonic_approx(W_sigma, Y_l, inv_function):
 def approx_feedback_set(
     W, Y_l, sigma_0, inv_function, eps=1e-3, delta=1, unlabeled_subset=None, kNN=None, sparse=False
 ):
-    """given a weight matrix W and labels Y and a starting sigma value, find a piecewise constant interval for sigma_0 with tolerance epsilon
+    """given a weight matrix W and labels Y and a starting sigma value,
+    find a piecewise constant interval for sigma_0 with tolerance epsilon
 
     Args:
         W (ndarray): weight matrix
@@ -72,11 +73,9 @@ def approx_feedback_set(
         kNN (int, optional): number of neighbors for kNN graph if set, else uses full graph
         sparse (boolean): whether or not to use the scipy sparse class when doing calculations
 
-    Raises:
-        ValueError: _description_
 
     Returns:
-        _type_: _description_
+        float, float int: min/max values of the piecewise constant interval, and number of matrix inverses taken
     """
     num_labeled = Y_l.shape[0]
     num_unlabeled = W.shape[0] - num_labeled
@@ -288,7 +287,8 @@ def find_accuracy_values(
     kNN=None,
 ):
     """find accuracy over some sigma range with some step size for a given problem (W, Y, num_labeled).
-    Also takes in an inverse function (full inverse vs CG method), problem instance function (single vs multiclass classification), and an accuracy function
+    Also takes in an inverse function (full inverse vs CG method),
+    problem instance function (single vs multiclass classification), and an accuracy function
 
     Args:
         sigma_0 (int): sigma start value

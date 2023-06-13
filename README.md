@@ -1,5 +1,6 @@
 # Efficient-SSL
-    Official implementation of [Efficiently Learning the Graph for Semi-supervised Learning](https://arxiv.org/abs/2306.07098)
+
+Official implementation of [Efficiently Learning the Graph for Semi-supervised Learning](https://arxiv.org/abs/2306.07098)
 
 We provide implementations for Algorithm 3 (Approx Feedback Set) using both HarmonicApprox (Algorithm 2 in the main body) and NonParametricApprox (Algorithm 1 in the appendix) as subroutines. If you already have the MNIST, FashionMNIST, or USPS pytorch datasets downloaded, let ROOT_PATH be the path to these datasets. If not, then set ROOT_PATH to the location where these datasets should be downloaded/stored upon use (default value is "/datasets/").
 
